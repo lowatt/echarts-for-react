@@ -17,11 +17,6 @@ export default class EChartsReactCore extends PureComponent<EChartsReactProps> {
   public ele: HTMLElement;
 
   /**
-   * if this is the first time we are resizing
-   */
-  private isInitialResize: boolean;
-
-  /**
    * echarts library entry
    */
   protected echarts: any;
@@ -31,7 +26,6 @@ export default class EChartsReactCore extends PureComponent<EChartsReactProps> {
 
     this.echarts = props.echarts;
     this.ele = null;
-    this.isInitialResize = true;
   }
 
   componentDidMount() {
@@ -202,21 +196,15 @@ export default class EChartsReactCore extends PureComponent<EChartsReactProps> {
     // 1. get the echarts object
     const echartsInstance = this.getEchartsInstance();
 
-    // 2. call echarts instance resize if not the initial resize
-    // resize should not happen on first render as it will cancel initial echarts animations
-    if (!this.isInitialResize) {
-      try {
-        echartsInstance.resize({
-          width: 'auto',
-          height: 'auto',
-        });
-      } catch (e) {
-        console.warn(e);
-      }
+    // 2. call echarts instance resize
+    try {
+      echartsInstance.resize({
+        width: 'auto',
+        height: 'auto',
+      });
+    } catch (e) {
+      console.warn(e);
     }
-
-    // 3. update variable for future calls
-    this.isInitialResize = false;
   }
 
   render(): JSX.Element {
